@@ -22,5 +22,10 @@ test.describe('File Upload Tests', () => {
         expect(await uploadPage.isDragDropAreaVisible()).toBeTruthy();
     });
 
+    test('should show error when submitting without file', async () => {
+        await uploadPage.uploadWithoutFile();
+        const errorMessage = await uploadPage.verifyInternalServerError();
+        expect(errorMessage).toBe('Internal Server Error');
+    });
 
 });

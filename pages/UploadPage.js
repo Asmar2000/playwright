@@ -6,7 +6,8 @@ export class UploadPage {
         this.uploadedFiles = '#uploaded-files';
         this.successMessage = '.example h3';
         this.dragDropArea = '#drag-drop-upload';
-        this.errorMessage = '#error';
+        this.serverErrorHeading = 'h1';
+
     }
 
     async goto() {
@@ -32,9 +33,10 @@ export class UploadPage {
         return await this.page.locator(this.dragDropArea).isVisible();
     }
 
-    async getErrorMessage() {
-        return await this.page.locator(this.errorMessage).textContent();
+   async verifyInternalServerError() {
+        return await this.page.locator(this.serverErrorHeading).textContent();
     }
+
 
     async uploadWithoutFile() {
         await this.page.click(this.uploadButton);
