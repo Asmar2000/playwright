@@ -18,4 +18,9 @@ test.describe('File Upload Tests', () => {
         expect(await uploadPage.getUploadedFileName()).toContain('sample.txt');
     });
 
+    test('should show drag and drop area', async () => {
+        expect(await uploadPage.isDragDropAreaVisible()).toBeTruthy();
+    });
+
+
 });
