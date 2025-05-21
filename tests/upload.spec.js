@@ -27,5 +27,42 @@ test.describe('File Upload Tests', () => {
         const errorMessage = await uploadPage.verifyInternalServerError();
         expect(errorMessage).toBe('Internal Server Error');
     });
+    test('should upload PDF file successfully', async () => {
+        const filePath = path.join(__dirname, '../fixtures/sample.pdf');
+        await uploadPage.uploadFile(filePath);
+        
+        expect(await uploadPage.verifyUploadSuccess()).toBeTruthy();
+        expect(await uploadPage.getUploadedFileName()).toContain('sample.pdf');
+    });
 
+    test('should upload image file successfully', async () => {
+        const filePath = path.join(__dirname, '../fixtures/test-image.jpg');
+        await uploadPage.uploadFile(filePath);
+        
+        expect(await uploadPage.verifyUploadSuccess()).toBeTruthy();
+        expect(await uploadPage.getUploadedFileName()).toContain('test-image.jpg');
+    });
+
+    test('should upload large file successfully', async () => {
+        const filePath = path.join(__dirname, '../fixtures/5mb.zip');
+        await uploadPage.uploadFile(filePath);
+        
+        expect(await uploadPage.verifyUploadSuccess()).toBeTruthy();
+        expect(await uploadPage.getUploadedFileName()).toContain('5mb.zip');
+    });
+
+    test('should handle multiple file uploads sequentially', async () => {
+        const files = [
+            path.join(__dirname, '../fixtures/sample.txt'),
+            path.join(__dirname, '../fixtures/test-image.jpg'),
+            path.join(__dirname, '../fixtures/sample.pdf')
+        ];
+
+        for (const file of files) {
+            await uploadPage.uploadFile(file);
+            expect(await uploadPage.verifyUploadSuccess()).toBeTruthy();
+            expect(await uploadPage.getUploadedFileName()).toContain(path.basename(file));
+            await uploadPage.goto(); // Reset for next upload
+        }
+    });
 });
